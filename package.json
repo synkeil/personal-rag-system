@@ -1,0 +1,37 @@
+{
+  "name": "personal-rag-system",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ingest": "ts-node scripts/ingest-project.ts",
+    "search": "ts-node scripts/search.ts",
+    "generate-context": "ts-node scripts/generate-context.ts",
+    "dev": "nodemon --exec ts-node scripts/search.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.13.1",
+  "dependencies": {
+    "@langchain/community": "^0.3.49",
+    "@langchain/openai": "^0.6.3",
+    "@supabase/supabase-js": "^2.52.1",
+    "airtable": "^0.12.2",
+    "commander": "^14.0.0",
+    "dotenv": "^17.2.1",
+    "langchain": "^0.3.30",
+    "markdown-it": "^14.1.0",
+    "openai": "^5.10.2",
+    "pdf-parse": "^1.1.1",
+    "simple-git": "^3.28.0"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^24.1.0",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
