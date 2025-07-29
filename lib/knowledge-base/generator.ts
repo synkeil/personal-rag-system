@@ -10,16 +10,18 @@ export class KnowledgeBaseGenerator {
     this.embeddingService = new EmbeddingService();
   }
 
-  async generateContextFiles(projectId: string, query?: string): Promise<void> {
-    const knowledgeBasePath = path.join(process.cwd(), 'knowledge-base');
+  async generateContextFiles(projectId: string, query?: string, customOutputPath?: string, threshold: number = 0.6): Promise<void> {
+    const knowledgeBasePath = customOutputPath || path.join(process.cwd(), 'knowledge-base');
     
     // Create project-specific directory
-    const projectPath = path.join(knowledgeBasePath, 'contexts', projectId);
+    const projectPath = customOutputPath 
+      ? path.join(knowledgeBasePath, '.claude')
+      : path.join(knowledgeBasePath, 'contexts', projectId);
     await fs.mkdir(projectPath, { recursive: true });
 
     if (query) {
       // Generate context for specific query
-      await this.generateQueryContext(projectId, query, projectPath);
+      await this.generateQueryContext(projectId, query, projectPath, threshold);
     } else {
       // Generate general project contexts
       await this.generateProjectOverview(projectId, projectPath);
@@ -28,7 +30,7 @@ export class KnowledgeBaseGenerator {
     }
   }
 
-  private async generateQueryContext(projectId: string, query: string, outputPath: string): Promise<void> {
+  private async generateQueryContext(projectId: string, query: string, outputPath: string, threshold: number = 0.6): Promise<void> {
     try {
       // Generate embedding for the query
       const queryEmbedding = await this.embeddingService.generateEmbedding(query);
@@ -38,7 +40,7 @@ export class KnowledgeBaseGenerator {
         .rpc('search_similar_chunks', {
           query_embedding: queryEmbedding,
           project_filter: projectId,
-          similarity_threshold: 0.6,
+          similarity_threshold: threshold,
           match_count: 20
         });
 

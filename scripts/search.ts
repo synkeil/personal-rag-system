@@ -60,8 +60,11 @@ async function searchProjects(query: string, options: any) {
     if (options.generateContext && projectId) {
       console.log('🔄 Generating context file for Claude Code...');
       const kbGenerator = new KnowledgeBaseGenerator();
-      await kbGenerator.generateContextFiles(projectId, query);
-      console.log('✅ Context file generated in knowledge-base/contexts/');
+      await kbGenerator.generateContextFiles(projectId, query, options.outputPath, options.threshold || 0.6);
+      const outputLocation = options.outputPath 
+        ? `${options.outputPath}/.claude/`
+        : 'knowledge-base/contexts/';
+      console.log(`✅ Context file generated in ${outputLocation}`);
     }
 
   } catch (error) {
@@ -78,6 +81,7 @@ program
   .option('-t, --threshold <number>', 'Similarity threshold (default: 0.6)', parseFloat)
   .option('-l, --limit <number>', 'Maximum results (default: 10)', parseInt)
   .option('-c, --generate-context', 'Generate context file for Claude Code')
+  .option('-o, --output-path <path>', 'Custom output path for context files')
   .action(searchProjects);
 
 program.parse();
